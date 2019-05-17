@@ -1,0 +1,771 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>GameEngine</name>
+    </assembly>
+    <members>
+        <member name="T:GameEngine.Camera">
+            <summary>
+            A camera object, used as a renderer for the scene.
+            </summary>
+        </member>
+        <member name="P:GameEngine.Camera.current">
+            <summary>
+            The currently active camera.
+            </summary>
+        </member>
+        <member name="P:GameEngine.Camera.backgroundColor">
+            <summary>
+            This color wil be shown where no sprite is rendered.
+            </summary>
+        </member>
+        <member name="P:GameEngine.Camera.aspectRatio">
+            <summary>
+            The width / height of the camera.
+            </summary>
+        </member>
+        <member name="M:GameEngine.Camera.#ctor(System.String,System.Double,OpenTK.Vector2d,OpenTK.Vector2d,System.Double,System.UInt64,System.Drawing.Color)">
+            <summary>
+            A constructor for a camera.
+            </summary>
+            <param name="name">The name of the camera.</param>
+            <param name="aspectRatio">The aspect ratio of the camera.</param>
+            <param name="position">The position of the camera.</param>
+            <param name="scale">The scale of the camera's FOV.</param>
+            <param name="angle">The angle of this camera with the X axis.</param>
+            <param name="layers">The layers that this camera can render.</param>
+            <param name="backgroundColor">The color displayed when no other object is rendered.</param>
+        </member>
+        <member name="M:GameEngine.Camera.remove">
+            <summary>
+            Remove this camera from the current scene.
+            </summary>
+        </member>
+        <member name="M:GameEngine.Camera.addToScene(GameEngine.Scene)">
+            <summary>
+            Add this camera to a scene.
+            </summary>
+            <param name="scene">The scene to add to.</param>
+        </member>
+        <member name="M:GameEngine.Camera.ToString">
+            <summary>
+            Returns a string containing inforation about the camera.
+            </summary>
+            <returns>A string containing inforation about the camera.</returns>
+        </member>
+        <member name="T:GameEngine.CircleCollider">
+            <summary>
+            A circle collider simulates collisions of circles.
+            </summary>
+        </member>
+        <member name="P:GameEngine.CircleCollider.radius">
+            <summary>
+            The radius of the collision circle.
+            </summary>
+        </member>
+        <member name="P:GameEngine.CircleCollider.diameter">
+            <summary>
+            The diamerter of the collision circle.
+            </summary>
+        </member>
+        <member name="M:GameEngine.CircleCollider.#ctor(System.Double,OpenTK.Vector2d,GameEngine.Physics)">
+            <summary>
+            Construct a circle collider based on some of the parameters.
+            </summary>
+            <param name="radius">The radius of the circle collider.</param>
+            <param name="center">The center of the circle collider relatice to the gameobject.</param>
+            <param name="physics">The physics object connected to this cllider.</param>
+        </member>
+        <member name="M:GameEngine.CircleCollider.#ctor(System.Double,OpenTK.Vector2d,System.Double,GameEngine.Physics)">
+            <summary>
+            Construct a circle collider based on all of the parameters.
+            </summary>
+            <param name="radius">The radius of the circle collider.</param>
+            <param name="center">The center of the circle collider relatice to the gameobject.</param>
+            <param name="bounciness">The bounciness of this collider.</param>
+            <param name="physics">The physics object connected to this cllider.</param>
+        </member>
+        <member name="F:GameEngine.Collider.physics">
+            <summary>
+            The physics object connected to this collider.
+            </summary>
+        </member>
+        <member name="P:GameEngine.Collider.gameObject">
+            <summary>
+            The game object connected to this collider.
+            </summary>
+        </member>
+        <member name="P:GameEngine.Collider.bounciness">
+            <summary>
+            How bouncy will the object be? Recomended to keep between zero and one.
+            </summary>
+        </member>
+        <member name="P:GameEngine.Collider.center">
+            <summary>
+            The center of the circle collider relative to the gameobject.
+            </summary>
+        </member>
+        <member name="T:GameEngine.Component">
+            <summary>
+            A componnent could be any class coupled with any game object.
+            </summary>
+        </member>
+        <member name="F:GameEngine.Component.gameObject">
+            <summary>
+            The game object connected to this component.
+            </summary>
+        </member>
+        <member name="M:GameEngine.Component.#ctor(GameEngine.GameObject)">
+            <summary>
+            A component constructor to set the gameobject.
+            </summary>
+            <param name="gameObject">The coupled gameobject.</param>
+        </member>
+        <member name="T:GameEngine.ExtensionMethods">
+            <summary>
+            General extension methods to aid development.
+            </summary>
+        </member>
+        <member name="M:GameEngine.ExtensionMethods.angle(OpenTK.Vector2d)">
+            <summary>
+            The angle a vector forms with the x axis.
+            </summary>
+            <param name="vector">The vector to check for an angle.</param>
+            <returns>The angle of the vector with the x axis</returns>
+        </member>
+        <member name="M:GameEngine.ExtensionMethods.gradient(OpenTK.Vector2d)">
+            <summary>
+            How many Y units will move every X unit of this vector.
+            </summary>
+            <param name="vector">The vector to check for gradient.</param>
+            <returns>The gradient of this vector.</returns>
+        </member>
+        <member name="M:GameEngine.ExtensionMethods.toUnitVector(System.Double)">
+            <summary>
+            Converts an angle with the X axis to the corsponding unit vector.
+            </summary>
+            <param name="angle">An angle with the X axis</param>
+            <returns>A unit vector with an angle with the X axis equel to angle.</returns>
+        </member>
+        <member name="M:GameEngine.ExtensionMethods.rotate(OpenTK.Vector2d,System.Double)">
+            <summary>
+            Rotate a vector a certain amount of degrees.
+            </summary>
+            <param name="vector">The vector to rotate.</param>
+            <param name="angle">The amount of degrees to rotate it.</param>
+            <returns>The rotated vector.</returns>
+        </member>
+        <member name="M:GameEngine.ExtensionMethods.distance(OpenTK.Vector2d,OpenTK.Vector2d)">
+            <summary>
+            Returns the distance between two positions
+            </summary>
+            <param name="position">The first position.</param>
+            <param name="other">The second position.</param>
+            <returns>The distance between the positions.</returns>
+        </member>
+        <member name="M:GameEngine.ExtensionMethods.sqrDistance(OpenTK.Vector2d,OpenTK.Vector2d)">
+            <summary>
+            Returns the squere distance between two positions0
+            </summary>
+            <param name="position">The first position.</param>
+            <param name="other">The second position.</param>
+            <returns>The squere distance between the positions.</returns>
+        </member>
+        <member name="M:GameEngine.ExtensionMethods.cosineOfAngleBetween(OpenTK.Vector2d,OpenTK.Vector2d)">
+            <summary>
+            Calculate the cosine of an angle between two vectors.
+            </summary>
+            <param name="a">The first vector.</param>
+            <param name="b">The second vector.</param>
+            <returns>The cosine of the angle between the two vectors.</returns>
+        </member>
+        <member name="T:GameEngine.Game">
+            <summary>
+            Base class of the game, includes static fields and methods to controll the game.
+            </summary>
+        </member>
+        <member name="P:GameEngine.Game.isPaused">
+            <summary>
+            Is the game paused?
+            </summary>
+        </member>
+        <member name="T:GameEngine.Game.number">
+            <summary>
+            A delegate for a metod containing a ulong parameter.
+            </summary>
+            <param name="num"></param>
+        </member>
+        <member name="E:GameEngine.Game.update">
+            <summary>
+            An event that calls every frame.
+            </summary>
+        </member>
+        <member name="E:GameEngine.Game.physicsUpdate">
+            <summary>
+            An event that calls every physics update.
+            </summary>
+        </member>
+        <member name="P:GameEngine.Game.displayRenderTime">
+            <summary>
+            Should the game display rendering time.
+            </summary>
+        </member>
+        <member name="P:GameEngine.Game.width">
+            <summary>
+            The width of the game rendering area.
+            </summary>
+        </member>
+        <member name="P:GameEngine.Game.height">
+            <summary>
+            The height of the game rendering area.
+            </summary>
+        </member>
+        <member name="P:GameEngine.Game.title">
+            <summary>
+            Gets and sets the title of the game, this text will be showed at the top border.
+            </summary>
+        </member>
+        <member name="P:GameEngine.Game.icon">
+            <summary>
+            Gets and sets the icon of the game, this text will be showed at the top border.
+            </summary>
+        </member>
+        <member name="P:GameEngine.Game.size">
+            <summary>
+            Gets the size of the game window.
+            </summary>
+        </member>
+        <member name="M:GameEngine.Game.worldToScreenPoint(OpenTK.Vector2d)">
+            <summary>
+            Converts a position in global space to a point on the screen in pixels.
+            </summary>
+            <param name="position">The position to convert.</param>
+            <returns>A position in pixels.</returns>
+        </member>
+        <member name="M:GameEngine.Game.pause">
+            <summary>
+            Stop the game time and physics.              TOFIX
+            </summary>
+        </member>
+        <member name="M:GameEngine.Game.unPause">
+            <summary>
+            Resumes the game time and physics.               TODO
+            </summary>
+        </member>
+        <member name="M:GameEngine.Game.quit">
+            <summary>
+            Close the application.
+            </summary>
+        </member>
+        <member name="M:GameEngine.Game.#ctor(System.Int32,System.Boolean)">
+            <summary>
+            Create a new game.
+            </summary>
+            <param name="width">The initial width of the game, this can be changed later.</param>
+            <param name="isFullscreen">Will the game be fullscreen, this can be changed later.</param>
+        </member>
+        <member name="T:GameEngine.GameObject">
+            <summary>
+            The base class for in game objects.
+            </summary>
+        </member>
+        <member name="F:GameEngine.GameObject.name">
+            <summary>
+            The name of the object.
+            </summary>
+        </member>
+        <member name="P:GameEngine.GameObject.layers">
+            <summary>
+            The layers of this gameobject, each bit represents a layer, an object could be on multiple layers.
+            </summary>
+        </member>
+        <member name="P:GameEngine.GameObject.sprite">
+            <summary>
+            The image to be drawn on the object.
+            </summary>
+        </member>
+        <member name="P:GameEngine.GameObject.localPosition">
+            <summary>
+            The position vector of the object in local space.
+            </summary>
+        </member>
+        <member name="P:GameEngine.GameObject.localScale">
+            <summary>
+            The local scale of the object.
+            </summary>
+        </member>
+        <member name="P:GameEngine.GameObject.physics">
+            <summary>
+            The physics object of this object.
+            </summary>
+        </member>
+        <member name="P:GameEngine.GameObject.localAngle">
+            <summary>
+            The local angle of the object, in radians.
+            </summary>
+        </member>
+        <member name="P:GameEngine.GameObject.parent">
+            <summary>
+            The parent object of this object, set to null if non.
+            </summary>
+        </member>
+        <member name="P:GameEngine.GameObject.position">
+            <summary>
+            The position of the object in global space.
+            </summary>
+        </member>
+        <member name="P:GameEngine.GameObject.scale">
+            <summary>
+            The scale of the object in global space.
+            </summary>
+        </member>
+        <member name="P:GameEngine.GameObject.angle">
+            <summary>
+            The angle of the object in global space.
+            </summary>
+        </member>
+        <member name="M:GameEngine.GameObject.#ctor">
+            <summary>
+            An empty constructor for gameobjects.
+            </summary>
+        </member>
+        <member name="M:GameEngine.GameObject.#ctor(System.String,GameEngine.Texture,OpenTK.Vector2d,OpenTK.Vector2d,System.Double,System.UInt64)">
+            <summary>
+            A full constructor to a game object.
+            </summary>
+            <param name="name">The name of the object.</param>
+            <param name="sprite">The image used to display the image.</param>
+            <param name="position">The position of the object.</param>
+            <param name="scale">The scale of the object.</param>
+            <param name="angle">The angle of the object with the X axis.</param>
+            <param name="layers">The layers of the object.</param>
+        </member>
+        <member name="P:GameEngine.GameObject.right">
+            <summary>
+            The unit vector pointing right from the object
+            </summary>
+        </member>
+        <member name="P:GameEngine.GameObject.up">
+            <summary>
+            The unit vector pointing up from the object
+            </summary>
+        </member>
+        <member name="P:GameEngine.GameObject.localRight">
+            <summary>
+            The unit vector pointing right from the object localy.
+            </summary>
+        </member>
+        <member name="P:GameEngine.GameObject.localUp">
+            <summary>
+            The unit vector pointing up from the object localy.
+            </summary>
+        </member>
+        <member name="P:GameEngine.GameObject.childCount">
+            <summary>
+            How many children does this object have?
+            </summary>
+        </member>
+        <member name="P:GameEngine.GameObject.descendantCount">
+            <summary>
+            How many descendants does this object have?
+            </summary>
+        </member>
+        <member name="P:GameEngine.GameObject.children">
+            <summary>
+            An array of this object's children.
+            </summary>
+        </member>
+        <member name="M:GameEngine.GameObject.localToGlobal(System.Double)">
+            <summary>
+            Converts an angle from this local space to global space.
+            </summary>
+            <param name="angle">The angle to convert.</param>
+            <returns>The converted angle</returns>
+        </member>
+        <member name="M:GameEngine.GameObject.globalToLocal(System.Double)">
+            <summary>
+            Converts an angle from global space to this local space.
+            </summary>
+            <param name="angle">The angle to convert.</param>
+            <returns>The converted angle</returns>
+        </member>
+        <member name="M:GameEngine.GameObject.localVectorToGlobal(OpenTK.Vector2d)">
+            <summary>
+            Converts a vector from this local space to global space.
+            </summary>
+            <param name="vector">The vector to convert</param>
+            <returns>The converted vector.</returns>
+        </member>
+        <member name="M:GameEngine.GameObject.globalVectorToLocal(OpenTK.Vector2d)">
+            <summary>
+            Converts a vector from global space to this local space.
+            </summary>
+            <param name="vector">The vector to convert</param>
+            <returns>The converted vector.</returns>
+        </member>
+        <member name="M:GameEngine.GameObject.localPositionToGlobal(OpenTK.Vector2d)">
+            <summary>
+            Converts a position from this local space to global space.
+            </summary>
+            <param name="position">The position to convert.</param>
+            <returns>The converted position.</returns>
+        </member>
+        <member name="M:GameEngine.GameObject.globalPositionToLocal(OpenTK.Vector2d)">
+            <summary>
+            Converts a position from global space to this local space.
+            </summary>
+            <param name="position">The position to convert.</param>
+            <returns>The converted position.</returns>
+        </member>
+        <member name="M:GameEngine.GameObject.lookAt(OpenTK.Vector2d)">
+            <summary>
+            Sets the right of the oject to look at a position.
+            </summary>
+            <param name="position">The position to look at.</param>
+        </member>
+        <member name="M:GameEngine.GameObject.lookAt(GameEngine.GameObject)">
+            <summary>
+            Sets the right of an object to look at another object.
+            </summary>
+            <param name="other">The object to look at.</param>
+        </member>
+        <member name="M:GameEngine.GameObject.remove">
+            <summary>
+            Remove this object from the current scene.
+            </summary>
+        </member>
+        <member name="M:GameEngine.GameObject.isChild(GameEngine.GameObject)">
+            <summary>
+            Is an object a child of this object?
+            </summary>
+            <param name="other">The object to check </param>
+            <returns>True if other is a child of this game object.</returns>
+        </member>
+        <member name="M:GameEngine.GameObject.isDescendant(GameEngine.GameObject)">
+            <summary>
+            Is an object Descendant of this object?
+            </summary>
+            <param name="other">The object to check </param>
+            <returns>True if other is descendant of this game object.</returns>
+        </member>
+        <member name="M:GameEngine.GameObject.addToScene(GameEngine.Scene)">
+            <summary>
+            Add this object to a scene.
+            </summary>
+            <param name="scene">The scene to add to.</param>
+        </member>
+        <member name="M:GameEngine.GameObject.ToString">
+            <summary>
+            Generates a string containing data about the object.
+            </summary>
+            <returns>A string containing data about the object.</returns>
+        </member>
+        <member name="T:GameEngine.LineCollider">
+            <summary>
+            A line collider simulates collisions of lines.
+            </summary>
+        </member>
+        <member name="T:GameEngine.Physics">
+            <summary>
+            Class of all physics data and calculation.
+            </summary>
+        </member>
+        <member name="P:GameEngine.Physics.usePhysics">
+            <summary>
+            Should physics act on this object?
+            </summary>
+        </member>
+        <member name="P:GameEngine.Physics.velocity">
+            <summary>
+            The local rate of change in position of the object. Measured in units per second.
+            </summary>
+        </member>
+        <member name="P:GameEngine.Physics.localVelocity">
+            <summary>
+            The rate of change in position of the object in global space, measured in units per second.
+            </summary>
+        </member>
+        <member name="P:GameEngine.Physics.localAngularSpeed">
+            <summary>
+            The rate of change in angle, in local space. Measured in radians per second.
+            </summary>
+        </member>
+        <member name="P:GameEngine.Physics.angularSpeed">
+            <summary>
+            The rate of change in angle, in radians per second.
+            </summary>
+        </member>
+        <member name="P:GameEngine.Physics.gravity">
+            <summary>
+            The constant acceleration of the body, measured in unity/seconds^2.
+            </summary>
+        </member>
+        <member name="P:GameEngine.Physics.circleColliders">
+            <summary>
+            The circle colliders of this object.
+            </summary>
+        </member>
+        <member name="P:GameEngine.Physics.lineColliders">
+            <summary>
+            The line colliders of this object.
+            </summary>
+        </member>
+        <member name="P:GameEngine.Physics.mass">
+            <summary>
+            The mass of this object, this does not include the mass of children objects.
+            </summary>
+        </member>
+        <member name="P:GameEngine.Physics.momentOfInertia">
+            <summary>
+            The moment of inertia of the object, higher values will require a stronger force to change angular speed.
+            </summary>
+        </member>
+        <member name="P:GameEngine.Physics.coefficiantOfDrag">
+            <summary>
+            A coefficient for the drag, higher values will result in more drag, negative values will result in opposite drag.
+            </summary>
+        </member>
+        <member name="P:GameEngine.Physics.dragFunction">
+            <summary>
+            The power the velocity would be raised to to calculate drag. Two is the realistic value.
+            </summary>
+        </member>
+        <member name="P:GameEngine.Physics.dragType">
+            <summary>
+            The type of drag to be applied on the object.
+            </summary>
+        </member>
+        <member name="P:GameEngine.Physics.dragMeshVertecies">
+            <summary>
+            The vertecies of the drag mesh. Only used with mesh drag mode.
+            </summary>
+        </member>
+        <member name="P:GameEngine.Physics.totalMass">
+            <summary>
+            The mass of this object and all of it's decendents.
+            </summary>
+        </member>
+        <member name="M:GameEngine.Physics.applyForce(OpenTK.Vector2d)">
+            <summary>
+            Applies a force to the object, this will change it's velocity.
+            </summary>
+            <param name="force">The force to apply on the object.</param>
+        </member>
+        <member name="M:GameEngine.Physics.applyTorque(System.Double)">
+            <summary>
+            Apply a torque to an object, this will change it's angular speed.
+            </summary>
+            <param name="torque"></param>
+        </member>
+        <member name="M:GameEngine.Physics.applyForceAtPosition(OpenTK.Vector2d,OpenTK.Vector2d)">
+            <summary>
+            Apply a force on the object at a local position, this affects it's velocity and anglular speed.
+            </summary>
+            <param name="force">The force vector to apply.</param>
+            <param name="position">The local position to apply the force at.</param>
+        </member>
+        <member name="P:GameEngine.Physics.calculatedThisFrame">
+            <summary>
+            Was physics calculated for this object this physics frame?
+            </summary>
+        </member>
+        <member name="M:GameEngine.Physics.update(System.UInt64)">
+            <summary>
+            An physics update function to be called on the physics event every physics frame.
+            </summary>
+            <param name="frame">The serial number of the frame.</param>
+        </member>
+        <member name="M:GameEngine.Program.Main">
+            <summary>
+            The main entry point for the application.
+            </summary>
+        </member>
+        <member name="T:GameEngine.Scene">
+            <summary>
+            A scene will contain all gameobjects and cameras in the scene, and functions to access them.
+            </summary>
+        </member>
+        <member name="M:GameEngine.Scene.getAllObjects">
+            <summary>
+            Get all objects in the scene, this includes gameobjects and cameras.
+            </summary>
+            <returns>An array of all objects in the scene.</returns>
+        </member>
+        <member name="P:GameEngine.Scene.currentSceneName">
+            <summary>
+            The name of the current scene.
+            </summary>
+        </member>
+        <member name="P:GameEngine.Scene.current">
+            <summary>
+            The current scene.
+            </summary>
+        </member>
+        <member name="M:GameEngine.Scene.addScene(GameEngine.Scene)">
+            <summary>
+            Add a scene to the scene collection.
+            </summary>
+            <param name="scene">The scene to add.</param>
+        </member>
+        <member name="F:GameEngine.Scene.name">
+            <summary>
+            The name identifier of the current scene.
+            </summary>
+        </member>
+        <member name="M:GameEngine.Scene.getAllGameObjects">
+            <summary>
+            Returns all game obects in the scene.
+            </summary>
+            <returns>All game obects in the scene.</returns>
+        </member>
+        <member name="M:GameEngine.Scene.findObjectsOnLayers(System.UInt64)">
+            <summary>
+            Find all objects in a certain layer.
+            </summary>
+            <param name="layers">The layers to search for.</param>
+            <returns>An array of game objects on the given layers.</returns>
+        </member>
+        <member name="M:GameEngine.Scene.getObject(System.String)">
+            <summary>
+            Get an object from the scene.
+            </summary>
+            <param name="name">The name of the game object to get.</param>
+            <returns>The game object with the given name.</returns>
+        </member>
+        <member name="M:GameEngine.Scene.addObject``1(``0)">
+            <summary>
+            Add an object to the scene.
+            </summary>
+            <typeparam name="T">A type that inherits the GameObject Class</typeparam>
+            <param name="gameObject">The game object to add to the scene.</param>
+        </member>
+        <member name="M:GameEngine.Scene.removeObject(System.String)">
+            <summary>
+            Remove a game object with a given name from the scene.
+            </summary>
+            <param name="name">The name of the object to remove.</param>
+        </member>
+        <member name="M:GameEngine.Scene.moveAll(OpenTK.Vector2d)">
+            <summary>
+            Moves all objects a certain amount, this will not have any visable affect.
+            </summary>
+            <param name="amount">The amount to move all objects.</param>
+        </member>
+        <member name="P:GameEngine.Scene.currentCamera">
+            <summary>
+            Get and set the current camera, setting a camera that is not in the scene will add it to the scene.
+            </summary>
+        </member>
+        <member name="M:GameEngine.Scene.setCurrentCamera(GameEngine.Camera)">
+            <summary>
+            Sets the current camera, setting a camera that is not in the scene will add it to the scene.
+            </summary>
+            <param name="camera">The camera to set.</param>
+        </member>
+        <member name="M:GameEngine.Scene.setCurrentCamera(System.String)">
+            <summary>
+            Sets the current camera.
+            </summary>
+            <param name="name">The name of the camera to set.</param>
+        </member>
+        <member name="M:GameEngine.Scene.getAllCameras">
+            <summary>
+            Returns all cameras in the scene.
+            </summary>
+            <returns>All cameras in the scene.</returns>
+        </member>
+        <member name="M:GameEngine.Scene.findCamerasOnLayers(System.UInt64)">
+            <summary>
+            Find all cameras in a certain layer.
+            </summary>
+            <param name="layers">The layers to search for.</param>
+            <returns>An array of cameras on the given layers.</returns>
+        </member>
+        <member name="M:GameEngine.Scene.getCamera(System.String)">
+            <summary>
+            Get a camera from the scene.
+            </summary>
+            <param name="name">The name of the camera to get.</param>
+            <returns>The camera with the given name.</returns>
+        </member>
+        <member name="M:GameEngine.Scene.addCamera(GameEngine.Camera)">
+            <summary>
+            Add a camera to the scene.
+            </summary>
+            <param name="camera">The camera to add to the scene.</param>
+        </member>
+        <member name="M:GameEngine.Scene.removeCamera(System.String)">
+            <summary>
+            Remove a camera with a given name from the scene.
+            </summary>
+            <param name="name">The name of the camera to remove.</param>
+        </member>
+        <member name="M:GameEngine.Scene.#ctor(System.String)">
+            <summary>
+            An empty scene constructor.
+            </summary>
+        </member>
+        <member name="T:GameEngine.Texture">
+            <summary>
+            An image to be shown on objects.
+            </summary>
+        </member>
+        <member name="P:GameEngine.Texture.width">
+            <summary>
+            The width of this texture in pixels.
+            </summary>
+        </member>
+        <member name="P:GameEngine.Texture.height">
+            <summary>
+            The height of this texture in pixels.
+            </summary>
+        </member>
+        <member name="P:GameEngine.Texture.resolution">
+            <summary>
+            The size of this texture in pixels.
+            </summary>
+        </member>
+        <member name="M:GameEngine.Texture.#ctor(System.String)">
+            <summary>
+            Construct a texture from a image at a path.
+            </summary>
+            <param name="path">The path of the image.</param>
+        </member>
+        <member name="T:GameEngine.Utility">
+            <summary>
+            General utility functions to aid development.
+            </summary>
+        </member>
+        <member name="T:GameEngine.Properties.Resources">
+            <summary>
+              A strongly-typed resource class, for looking up localized strings, etc.
+            </summary>
+        </member>
+        <member name="P:GameEngine.Properties.Resources.ResourceManager">
+            <summary>
+              Returns the cached ResourceManager instance used by this class.
+            </summary>
+        </member>
+        <member name="P:GameEngine.Properties.Resources.Culture">
+            <summary>
+              Overrides the current thread's CurrentUICulture property for all
+              resource lookups using this strongly typed resource class.
+            </summary>
+        </member>
+        <member name="T:dragType">
+            <summary>
+            How should the drag be modeled?.
+            </summary>
+        </member>
+        <member name="F:dragType.Omnidirectional">
+            <summary>
+            Equal drag in all directions, this won't affect rotation, and should be used for spheres or when realistic drag isn't needed.
+            </summary>
+        </member>
+        <member name="F:dragType.Mesh">
+            <summary>
+            Drag wil be calculated based on a mesh, use when realistic drag is required. Often a triangle will be sufficiant.
+            </summary>
+        </member>
+    </members>
+</doc>

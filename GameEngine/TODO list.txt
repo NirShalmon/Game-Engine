@@ -1,0 +1,26 @@
+﻿//Separate physics to a differant class(this includes velocities)
+//Add force
+//Add force at position
+//Drag modes(square, liniar,constant ,inverse)
+//Circle collider
+//Line Collider
+inverse mass efficiency
+colliders in single variable
+Get all colliders of an object
+possibly physics matirials
+//rotations in collisions
+//friction
+tangent vector in line collider and collision.
+total moment of inertis
+Raycasting
+MAKE SURE LOCAL SPACE WORKS ESPECIALLY VELOCITY
+
+//Add child search methods(childrenCount, isChild, decendentsCount, isDecentant)
+
+Add scene save and load
+//Orgenize search methods in scene class
+
+updates frame number.
+
+Input
+Audio
