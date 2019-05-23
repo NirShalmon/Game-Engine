@@ -30,14 +30,14 @@ namespace GameEngine
         public static string currentSceneName { set; get; }
 
         /// <summary>
-        /// The current scene.
+        /// The current scene, or null if no scene is loaded.
         /// </summary>
         public static Scene current {
             get {
                 try {
                     return scenes[currentSceneName];
                 } catch(KeyNotFoundException) {
-                    throw new System.Exception("No scene is currently active.");
+                    return null;
                 }
             }
             set {

@@ -77,33 +77,39 @@ namespace GameEngine
         /// <param name="a">Any line collider.</param>
         /// <param name="b">Any line collider.</param>
         /// <returns>The collision data between the colliders, or null if no collision occured.</returns>
-        public static Collision getContact(LineCollider a,LineCollider b) {
-            double aGradient = a.globalGradient;
-            double bGradient = b.globalGradient;
-            if(aGradient == bGradient) {
+        public static Collision getCollision(LineCollider a,LineCollider b) {
+            if(Abs(a.globalAngle -b.globalAngle) < 1) {
                 return null;
             }
-            double xColl = aGradient * a.globalCenter.X - bGradient * b.globalCenter.X + b.globalCenter.Y - a.globalCenter.Y;
-            xColl /= aGradient - bGradient;
-            double dx = xColl - a.globalCenter.X;
-            double tipA = a.length * a.length / 4 - dx * dx * (aGradient * aGradient + 1);
-            if(tipA < 0) {
+            if((a.length + b.length).sqr() < a.globalCenter.sqrDistance(b.globalCenter)) { //quick check to exclude far away objects
                 return null;
             }
-            dx = xColl - b.globalCenter.X;
-            double tipB = b.length * b.length / 4 - dx * dx * (bGradient * bGradient + 1);
-            if(tipB < 0) {
-                return null;
+            Vector2d aTangent = a.globalTangentVector;
+            Vector2d bTangent = b.globalTangentVector;
+            double a2 = (a.globalCenter.Y - b.globalCenter.Y + (b.globalCenter.X-a.globalCenter.X) * aTangent.Y / aTangent.X) / (bTangent.Y-bTangent.X*aTangent.Y/aTangent.X);
+            Vector2d contact = b.globalCenter + a2 * bTangent;
+            if(contact.sqrDistance(a.globalCenter) > a.length.sqr()/4 || contact.sqrDistance(b.globalCenter) > b.length.sqr()/4) {
+                return null; //contact is outside of line segment
             }
-            Vector2d normal = tipA < tipB ? b.globalNormalVector : a.globalNormalVector;
-            if(Vector2d.Dot(a.globalCenter,normal) < 0) {
-                normal *= -1;
+            double aDistanceFromEndpoint = a.length/2 - contact.distance(a.globalCenter); //The distance of the contact point from a's closest endpoint
+            double bDistanceFromEndpoint = b.length/2 - contact.distance(b.globalCenter); //The distance of the contact point from b's closest endpoint
+            Vector2d normal = aDistanceFromEndpoint > bDistanceFromEndpoint ? a.globalNormalVector : b.globalNormalVector;
+            if(aDistanceFromEndpoint > bDistanceFromEndpoint) {
+                normal = a.globalNormalVector;
+                if(Vector2d.Dot(normal,contact - b.globalCenter) > 0) {
+                    normal *= -1;
+                }
+            }else {
+                normal = b.globalNormalVector;
+                if (Vector2d.Dot(normal, contact - a.globalCenter) < 0) {
+                    normal *= -1;
+                }
             }
             return new Collision(a,
                 b,
                 normal,
-                b.globalCenter + new Vector2d(dx,bGradient * dx),
-                Sqrt(Min(tipA,tipB)));
+                contact,
+                Min(aDistanceFromEndpoint,bDistanceFromEndpoint));
         }
     }
 }

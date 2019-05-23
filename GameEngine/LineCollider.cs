@@ -21,7 +21,7 @@ namespace GameEngine
         /// <summary>
         /// The angle of the line with the X axis in the global space.
         /// </summary>
-        public double globalAngle {
+        public Angle globalAngle {
             get {
                 return angle + gameObject.angle;
             }
@@ -105,6 +105,24 @@ namespace GameEngine
         public Vector2d globalNormalVector {
             get {
                 return ((double)normalGlobalAngle).toUnitVector();
+            }
+        }
+
+        /// <summary>
+        /// The vector tangent to the line in global space.
+        /// </summary>
+        public Vector2d globalTangentVector {
+            get {
+                return ((double)globalAngle).toUnitVector();
+            }
+        }
+
+        /// <summary>
+        /// The vector tangent to the line in local space.
+        /// </summary>
+        public Vector2d tangentVector {
+            get {
+                return ((double)angle).toUnitVector();
             }
         }
 

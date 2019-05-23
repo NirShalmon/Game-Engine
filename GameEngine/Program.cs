@@ -47,10 +47,10 @@ namespace GameEngine
             physics.usePhysics = true;
             physics.mass = 5;
             physics.colliders.Add(new CircleCollider(1.5,Vector2d.Zero,0.3,physics));
-           /* physics.lineColliders.Add(new LineCollider(physics,Vector2d.UnitY * 1.5,3,0,0));
-            physics.lineColliders.Add(new LineCollider(physics,Vector2d.UnitY *- 1.5,3,0,0));
-            physics.lineColliders.Add(new LineCollider(physics,Vector2d.UnitX * 1.5,3,Angle.piOver2,0));
-            physics.lineColliders.Add(new LineCollider(physics,Vector2d.UnitX * -1.5,3,Angle.piOver2,0));*/
+            /*physics.colliders.Add(new LineCollider(physics,Vector2d.UnitY * 1.5,3.1,0,0));
+            physics.colliders.Add(new LineCollider(physics,Vector2d.UnitY *- 1.5,3.1,0,0));
+            physics.colliders.Add(new LineCollider(physics,Vector2d.UnitX * 1.5,3.1,Angle.piOver2,0));
+            physics.colliders.Add(new LineCollider(physics,Vector2d.UnitX * -1.5,3.1,Angle.piOver2,0));*/
             physics.velocity = velocity;
             physics.momentOfInertia = 5;
             this.a = a;

@@ -283,7 +283,7 @@
             <param name="b">Any Circle collider.</param>
             <returns>The collision data between the colliders, or null if no collision occured.</returns>
         </member>
-        <member name="M:GameEngine.CollisionDetectors.getContact(GameEngine.LineCollider,GameEngine.LineCollider)">
+        <member name="M:GameEngine.CollisionDetectors.getCollision(GameEngine.LineCollider,GameEngine.LineCollider)">
             <summary>
             Get collision data between two collliders. NOTE, this will not cause a physical collision, if you want to cause a collision use the function "collide()" in the object returned.
             </summary>
@@ -771,6 +771,16 @@
             The vector perpendicular to the line in global space.
             </summary>
         </member>
+        <member name="P:GameEngine.LineCollider.globalTangentVector">
+            <summary>
+            The vector tangent to the line in global space.
+            </summary>
+        </member>
+        <member name="P:GameEngine.LineCollider.tangentVector">
+            <summary>
+            The vector tangent to the line in local space.
+            </summary>
+        </member>
         <member name="M:GameEngine.LineCollider.#ctor(GameEngine.Physics)">
             <summary>
             An empty constructor for the line collider, sets all parameters to default.
@@ -932,6 +942,22 @@
             Drag wil be calculated based on a mesh, use when realistic drag is required. Often a triangle will be sufficiant.
             </summary>
         </member>
+        <member name="T:GameEngine.Space">
+            <summary>
+            Used to identify the coordinate system used.
+            </summary>
+        </member>
+        <member name="F:GameEngine.Space.global">
+            <summary>
+            The global coordinate system - Screen x and y axies.
+            </summary>
+        </member>
+        <member name="F:GameEngine.Space.local">
+            <summary>
+            The local coordinate system for some object - Axies direction is derived from the up and right attributes of the object.
+            The object is located at the (0,0) coordinate.
+            </summary>
+        </member>
         <member name="M:GameEngine.Program.Main">
             <summary>
             The main entry point for the application.
@@ -955,7 +981,7 @@
         </member>
         <member name="P:GameEngine.Scene.current">
             <summary>
-            The current scene.
+            The current scene, or null if no scene is loaded.
             </summary>
         </member>
         <member name="M:GameEngine.Scene.addScene(GameEngine.Scene)">
