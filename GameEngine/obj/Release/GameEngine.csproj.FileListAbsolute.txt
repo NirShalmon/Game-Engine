@@ -9,3 +9,13 @@ C:\Users\Nir Shalmon\documents\visual studio 2015\Projects\GameEngine\GameEngine
 C:\Users\Nir Shalmon\documents\visual studio 2015\Projects\GameEngine\GameEngine\obj\Release\GameEngine.exe
 C:\Users\Nir Shalmon\documents\visual studio 2015\Projects\GameEngine\GameEngine\obj\Release\GameEngine.pdb
 C:\Users\Nir Shalmon\documents\visual studio 2015\Projects\GameEngine\GameEngine\bin\Release\GameEngine.XML
+C:\Users\Nirsh\OneDrive\מסמכים\Visual Studio 2015\Projects\GameEngine\GameEngine\bin\Release\GameEngine.exe.config
+C:\Users\Nirsh\OneDrive\מסמכים\Visual Studio 2015\Projects\GameEngine\GameEngine\bin\Release\GameEngine.XML
+C:\Users\Nirsh\OneDrive\מסמכים\Visual Studio 2015\Projects\GameEngine\GameEngine\obj\Release\GameEngine.exe
+C:\Users\Nirsh\OneDrive\מסמכים\Visual Studio 2015\Projects\GameEngine\GameEngine\obj\Release\GameEngine.pdb
+C:\Users\Nirsh\OneDrive\מסמכים\Visual Studio 2015\Projects\GameEngine\GameEngine\bin\Release\GameEngine.exe
+C:\Users\Nirsh\OneDrive\מסמכים\Visual Studio 2015\Projects\GameEngine\GameEngine\bin\Release\GameEngine.pdb
+C:\Users\Nirsh\OneDrive\מסמכים\Visual Studio 2015\Projects\GameEngine\GameEngine\bin\Release\OpenTK.pdb
+C:\Users\Nirsh\OneDrive\מסמכים\Visual Studio 2015\Projects\GameEngine\GameEngine\obj\Release\GameEngine.csprojResolveAssemblyReference.cache
+C:\Users\Nirsh\OneDrive\מסמכים\Visual Studio 2015\Projects\GameEngine\GameEngine\obj\Release\GameEngine.Properties.Resources.resources
+C:\Users\Nirsh\OneDrive\מסמכים\Visual Studio 2015\Projects\GameEngine\GameEngine\obj\Release\GameEngine.csproj.GenerateResource.Cache

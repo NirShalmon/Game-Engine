@@ -179,9 +179,24 @@ namespace GameEngine
         }
 
         /// <summary>
+        /// The velocity of the object at a (possibly offcenter) point. This takes rotation into account
+        /// </summary>
+        public Vector2d getVelocityAtPoint(Vector2d point, Space space = Space.global) {
+            if(space == Space.global) {
+                Vector2d pointRelative = point - gameObject.position;
+                Vector2d tangent = pointRelative.rotate90Deg().Normalized();
+                return velocity + angularSpeed * tangent * pointRelative.Length;
+            }else {
+                Vector2d tangent = point.rotate90Deg();
+                return localVelocity + localAngularSpeed * tangent * point.Length;
+            }
+        } 
+
+        /// <summary>
         /// Applies a force to the object, this will change it's velocity.
         /// </summary>
         /// <param name="force">The force to apply on the object.</param>
+        /// <param name="space">Are we working in global or local coordinates</param>
         public virtual void applyForce(Vector2d force, Space space = Space.global) {
             if(space == Space.local) {
                 localVelocity += force / totalMass;
@@ -195,6 +210,7 @@ namespace GameEngine
         /// </summary>
         /// <param name="force">The magnitude of the force to be applied.</param>
         /// <param name="direction">A normalized direction to apply the force at.</param>
+        /// <param name="space">Are we working in global or local coordinates</param>
         public virtual void applyForceInDirection(double force,Vector2d direction, Space space = Space.global) {
             applyForce(direction * force,space);
         }
@@ -212,16 +228,13 @@ namespace GameEngine
         /// </summary>
         /// <param name="force">The force vector to apply.</param>
         /// <param name="position">The local position to apply the force at.</param>
-        public virtual void applyForceAtPosition(Vector2d force,Vector2d position, Space space = Space.global) {
+        /// <param name="space">Are we working in global or local coordinates</param>
+        public virtual void applyForceAtPosition(Vector2d force,Vector2d position, Space space = Space.local) {
             applyForce(force,space);
-            //System.Diagnostics.Debug.Write(force.Length * position.Length * force.cosineOfAngleBetween(position));
-            //applyTorque(force.Length * position.Length * gameObject.localVectorToGlobal(force).cosineOfAngleBetween(gameObject.localPositionToGlobal(position) - gameObject.position));
-            //applyTorque(force.Length * position.Length * Sin(force.angleBetween(position)));
             if(space == Space.global) {
                 position -= gameObject.position;
             }
             applyTorque(position.cross(force));
-            //applyTorque(force.X);
         }
 
         /// <summary>
@@ -243,16 +256,10 @@ namespace GameEngine
                 return;
             }
             calculatedThisFrame = true;
-            velocity += gravity / 60;
+            applyForce(gravity / 60);
             gameObject.localPosition += localVelocity / 60;
             gameObject.localAngle += localAngularSpeed / 60;
             applyDrag();
-            /*for(int i = 0; i < circleColliders.Count; i++) {
-                circleColliders[i].scan();
-            }
-            for(int i = 0; i < lineColliders.Count; i++) {
-                lineColliders[i].scan();
-            }*/
         }
 
         internal static void collisions() {
@@ -261,122 +268,18 @@ namespace GameEngine
                 if(objects[i].physics.usePhysics) {
                     for(int j = i + 1; j < objects.Length; j++) {
                         if(objects[j].physics.usePhysics && (objects[j].layers & objects[i].layers) != 0) {
-                            Collision collision = new Collision(objects[i].physics.circleColliders[a],objects[j].physics.circleColliders[b]);
-                            /*for(int a = 0; a < objects[i].physics.circleColliders.Count; a++) {
-                                for(int b = 0; b < objects[j].physics.circleColliders.Count; b++) {
-                                    //Adding collisions to the list, keepin nulls to later treatment.
-                                    collisions.Add(getCollision(objects[i].physics.circleColliders[a],objects[j].physics.circleColliders[b]));
-                                }
-                                for(int b = 0; b < objects[j].physics.lineColliders.Count; b++) {
-                                    collisions.Add(getCollision(objects[i].physics.circleColliders[a],objects[j].physics.lineColliders[b]));
+                            foreach(dynamic a in objects[i].physics.colliders) {
+                                foreach(dynamic b in objects[j].physics.colliders) {
+                                    Collision collision = CollisionDetectors.getCollision(a, b);
+                                    if (collision != null) {
+                                        collision.collide();
+                                    }
                                 }
                             }
-                            for(int a = 0; a < objects[i].physics.lineColliders.Count; a++) {
-                                for(int b = 0; b < objects[j].physics.lineColliders.Count; b++) {
-                                    collisions.Add(getCollision(objects[i].physics.lineColliders[a],objects[j].physics.lineColliders[b]));
-                                }
-                                for(int b = 0; b < objects[j].physics.circleColliders.Count; b++) {
-                                    collisions.Add(getCollision(objects[j].physics.circleColliders[b],objects[i].physics.lineColliders[a]));
-                                }
-                            }*/
-                            collision.collide();
                         }
                     }
                 }
             }
-        }
-
-        public static Contact getContact(Collider a, Collider b) {
-            switch(a.GetType().MetadataToken) {
-                case :
-
-
-            }
-        }
-
-        /// <summary>
-        /// Get collision data between two collliders. NOTE, this will not cause a physical collision, if you want to cause a collision use the function "collide()" in the object returned.
-        /// </summary>
-        /// <param name="a">Any circle collider.</param>
-        /// <param name="b">Any circle collider.</param>
-        /// <returns>The collision data between the colliders, or null if no collision occured.</returns>
-        public static Contact getConatct(CircleCollider a,CircleCollider b) {
-            if((a.globalCenter - b.globalCenter).LengthSquared <= (a.radius + b.radius) * (a.radius + b.radius)) {
-                return new Contact(a,
-                            b,
-                            -(a.globalCenter - b.globalCenter).Normalized(),
-                            (a.globalCenter * a.radius + b.globalCenter * b.radius) / (a.radius + b.radius),
-                            Min(a.bounciness,b.bounciness),
-                            a.radius + b.radius - (a.globalCenter - b.globalCenter).Length);
-            }
-            return null;
-        }
-
-        /// <summary>
-        /// Get collision data between two collliders. NOTE, this will not cause a physical collision, if you want to cause a collision use the function "collide()" in the object returned.
-        /// </summary>
-        /// <param name="a">Any line collider.</param>
-        /// <param name="b">Any line collider.</param>
-        /// <returns>The collision data between the colliders, or null if no collision occured.</returns>
-        public static Collision getContact(LineCollider a,LineCollider b) {
-            double aGradient = a.globalGradient;
-            double bGradient = b.globalGradient;
-            if(aGradient == bGradient) {
-                return null;
-            }
-            double xColl = aGradient * a.globalCenter.X - bGradient * b.globalCenter.X + b.globalCenter.Y - a.globalCenter.Y;
-            xColl /= aGradient - bGradient;
-            double dx = xColl - a.globalCenter.X;
-            double tipA = a.length * a.length / 4 - dx * dx * (aGradient * aGradient + 1);
-            if(tipA < 0) {
-                return null;
-            }
-            dx = xColl - b.globalCenter.X;
-            double tipB = b.length * b.length / 4 - dx * dx * (bGradient * bGradient + 1);
-            if(tipB < 0) {
-                return null;
-            }
-            Vector2d normal = tipA < tipB ? b.globalNormalVector : a.globalNormalVector;
-            if(Vector2d.Dot(a.globalCenter,normal) < 0) {
-                normal *= -1;
-            }
-            return new Contact(a,
-                b,
-                normal,
-                b.globalCenter + new Vector2d(dx,bGradient * dx),
-                Min(a.bounciness,b.bounciness),
-                Sqrt(Min(tipA,tipB)));
-        }
-
-        /// <summary>
-        /// Get collision data between two collliders. NOTE, this will not cause a physical collision, if you want to cause a collision use the function "collide()" in the object returned.
-        /// </summary>
-        /// <param name="a">Any circle collider.</param>
-        /// <param name="b">Any line collider.</param>
-        /// <returns>The collision data between the colliders, or null if no collision occured.</returns>
-        public static Contact getContact(CircleCollider a,LineCollider b) {
-            //precalculate gradient for efficiancy.
-            double gradient = b.globalGradient;
-            //squere distance between circle center to possible contact point
-            double sqrDistance = a.globalCenter.Y - b.globalCenter.Y + gradient * (b.globalCenter.X - a.globalCenter.X);
-            sqrDistance *= sqrDistance / (gradient * gradient + 1);
-            if(sqrDistance > a.radius * a.radius) {
-                return null;
-            }
-            if(a.globalCenter.sqrDistance(b.globalCenter) - sqrDistance > b.length * b.length / 4) {
-                return null;
-            }
-            Vector2d normal = b.globalNormalVector;
-            //look here for 1 directional colliders.
-            if((a.globalCenter - b.globalCenter).cosineOfAngleBetween(normal) > 0) {
-                normal *= -1;
-            }
-            return new Contact(a,
-                b,
-                normal,
-                a.globalCenter + Sqrt(sqrDistance) * normal,
-                Min(a.bounciness,b.bounciness),
-                a.radius - Sqrt(sqrDistance));
         }
     }
 
@@ -395,9 +298,19 @@ namespace GameEngine
         Mesh
     }
 
+    /// <summary>
+    /// Used to identify the coordinate system used.
+    /// </summary>
     public enum Space
     {
+        /// <summary>
+        /// The global coordinate system - Screen x and y axies.
+        /// </summary>
         global,
+        /// <summary>
+        /// The local coordinate system for some object - Axies direction is derived from the up and right attributes of the object.
+        /// The object is located at the (0,0) coordinate.
+        /// </summary>
         local
     }
 }

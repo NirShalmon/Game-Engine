@@ -193,17 +193,15 @@ namespace GameEngine
         }
 
         internal void OnRenderFrame(object sendr,FrameEventArgs e) {
-            if(update != null) {
-                update(frameCount);
-            }
-            if(displayRenderTime) {
+            update?.Invoke(frameCount);
+            if (displayRenderTime) {
                 watch.Start();
             }
             if(Camera.current != null) {
                 GL.Clear(ClearBufferMask.ColorBufferBit);
                 GL.ClearColor(Camera.current.backgroundColor);
                 if(displayRenderTime) {
-                   // Graphics g = Graphics.fro
+                   // Graphics g = Graphics.fro   TODO
                 }
                 for(int l = 63; l >= 0; l--) {
                     if((Camera.current.layers & (1ul << l)) != 0) {

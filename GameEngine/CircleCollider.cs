@@ -29,7 +29,7 @@ namespace GameEngine
         /// Construct a circle collider based on some of the parameters.
         /// </summary>
         /// <param name="radius">The radius of the circle collider.</param>
-        /// <param name="center">The center of the circle collider relatice to the gameobject.</param>
+        /// <param name="center">The center of the circle collider relative to the gameobject.</param>
         /// <param name="physics">The physics object connected to this cllider.</param>
         public CircleCollider(double radius,Vector2d center,Physics physics):base(physics,center) {
             this.radius = radius;

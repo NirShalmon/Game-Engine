@@ -12,19 +12,42 @@ namespace GameEngine
         /// <summary>
         /// The first collider in the collision.
         /// </summary>
-        public readonly Physics a;
+        public readonly Collider colliderA;
 
         /// <summary>
         /// The second collider in the collision.
         /// </summary>
-        public readonly Physics b;
-
-        public List<Contact> contacts;
+        public readonly Collider colliderB;
 
         /// <summary>
-        /// The relative velocity vector of the collision.
+        /// The relative velocity vector of the collision at the contact point.
         /// </summary>
         public readonly Vector2d relativeVelocity;
+
+        /// <summary>
+        /// The relative speed in the direction perpendicular to the colision.
+        /// </summary>
+        public readonly double relativeSpeedAlongNormal;
+
+        /// <summary>
+        /// The relative speed in the direction tangent to the colision.
+        /// </summary>
+        public readonly double relativeSpeedAlongTangent;
+
+        /// <summary>
+        /// The vector perpendicular to the collision.
+        /// </summary>
+        public readonly Vector2d normal;
+
+        /// <summary>
+        /// The vector tangent to the collision.
+        /// </summary>
+        public readonly Vector2d tangent;
+
+        /// <summary>
+        /// The point where the two colliders touched.
+        /// </summary>
+        public readonly Vector2d contact;
 
         /// <summary>
         /// The bounce coefficient of the collision.
@@ -32,16 +55,9 @@ namespace GameEngine
         public readonly double restetution;
 
         /// <summary>
-        /// The bounce coefficient of the collision.
+        /// The depth of the overlap between the two colliders.
         /// </summary>
-        public readonly double staticFriction;
-
-        /// <summary>
-        /// The bounce coefficient of the collision.
-        /// </summary>
-        public readonly double dynamicFriction;
-        
-        public Vector2d penetration { private set; get; }
+        public readonly double penetrationDepth;
 
         /// <summary>
         /// A collision constructor filling in all of the collision data.
@@ -50,61 +66,72 @@ namespace GameEngine
         /// <param name="b">The second collider in the collision.</param>
         /// <param name="normal">The vector perpendicular to the collision.</param>
         /// <param name="contact">The point where the two colliders touched</param>
-        /// <param name="restetution">The bounce coefficient of the collision</param>
         /// <param name="penetrationDepth">How deep are the objects penetrating into each other</param>
-        public Collision(Physics a,Physics b) {
-            this.a = a;
-            this.b = b;
-            relativeVelocity = b.physics.velocity- a.physics.velocity;
+        public Collision(Collider a, Collider b, Vector2d normal, Vector2d contact, double penetrationDepth) {
+            colliderA = a;
+            colliderB = b;
+            relativeVelocity = b.physics.getVelocityAtPoint(contact) - a.physics.getVelocityAtPoint(contact);
             restetution = Min(a.bounciness,b.bounciness);
-            staticFriction = (a.staticFriction + b.staticFriction) / 2;
-            dynamicFriction = (a.dynamicFriction + b.dynamicFriction) / 2;
-        }
-
-        public void addContact(Vector2d point, Vector2d normal, double penetrationDepth) {
-            penetration += normal * penetrationDepth;
-            contacts.Add(new Contact(point,normal,relativeVelocity + b.physics.angularSpeed.cross(point - b.gameObject.position) - a.physics.angularSpeed.cross(point - a.gameObject.position)));
+            this.normal = normal;
+            tangent = normal.rotate90Deg();
+            relativeSpeedAlongNormal = Vector2d.Dot(relativeVelocity, normal);
+            relativeSpeedAlongTangent = Vector2d.Dot(relativeVelocity, tangent);
+            this.contact = contact;
+            this.penetrationDepth = penetrationDepth;
         }
 
         /// <summary>
         /// Invoke the collision, this will make the physics engine take the collision into effect.
         /// </summary>
         public void collide() {
-            foreach(Contact contact in contacts) {
-                if(contact.relativeSpeedAlongNormal > 0) {
-                    return;
-                    //Trigger.
-                }
-                //Collision:
-                double j = -contact.relativeSpeedAlongNormal * (1 + restetution);
-                double devisor = 1 / a.physics.totalMass + 1 / b.physics.totalMass + ((contact.point - a.gameObject.position).cross(contact.normal)).sqr() / b.physics.momentOfInertia + ((contact.point - b.gameObject.position).cross(contact.normal)).sqr() / b.physics.momentOfInertia;
-                j /= devisor;
-                Vector2d impulse = j * contact.normal / 2;
-
-                //friction:
-                double jt = -contact.relativeSpeedAlongTangent / devisor / 2;
-
-                if(contact.relativeSpeedAlongTangent.inSymetricRange(Abs(contact.relativeSpeedAlongNormal * (a.staticFriction + b.staticFriction)))) {
-                    impulse += ((jt / a.physics.totalMass) + (jt / b.physics.totalMass)) * contact.tangent;
-                    //System.Diagnostics.Debug.Write("static" + jt * tangent + "\n");
-                } else {
-                    impulse += -j * (a.dynamicFriction + b.dynamicFriction) / 2 * contact.tangent;
-                    //System.Diagnostics.Debug.Write("dynamic" + a.gameObject.position.Y + "\n");
-                }
-                a.physics.applyForceAtPosition(-impulse,contact.point,Space.global);
-                b.physics.applyForceAtPosition(impulse,contact.point,Space.global);
-                System.Diagnostics.Debug.Write(contact);
-                pushApart();
+            //Collision:
+            double j = -relativeSpeedAlongNormal * (1 + restetution);
+            double momentumBalancer;
+            if(colliderA.physics.totalMass == double.PositiveInfinity) {
+                momentumBalancer = colliderB.physics.totalMass;
+            }else if(colliderB.physics.totalMass == double.PositiveInfinity) {
+                momentumBalancer = colliderA.physics.totalMass;
+            }else {
+                momentumBalancer = (colliderA.physics.totalMass * colliderB.physics.totalMass) / (colliderA.physics.totalMass + colliderB.physics.totalMass);
             }
+            double normalForce = -relativeSpeedAlongNormal * (1 + restetution) * momentumBalancer;
+            Vector2d impulse = normalForce * normal;
+            Vector2d frictionDirection = relativeSpeedAlongTangent > 0 ? -tangent : tangent;
+            double maxStaticFrictionForce = normalForce * (colliderA.staticFriction + colliderB.staticFriction) / 2;
+            //test application of max static friction to see if static friction can arrest tangent motion
+            colliderA.physics.applyForceAtPosition(-frictionDirection * maxStaticFrictionForce, contact, Space.global);
+            colliderB.physics.applyForceAtPosition(frictionDirection * maxStaticFrictionForce, contact, Space.global);
+            double newRelativeSpeedAlongTangent = Vector2d.Dot(colliderA.physics.getVelocityAtPoint(contact) - colliderB.physics.getVelocityAtPoint(contact), tangent);
+            //cancel out the tested force application
+            colliderA.physics.applyForceAtPosition(frictionDirection * maxStaticFrictionForce, contact, Space.global);
+            colliderB.physics.applyForceAtPosition(-frictionDirection * maxStaticFrictionForce, contact, Space.global);
+            double tangentSpeedChange = Abs(newRelativeSpeedAlongTangent - relativeSpeedAlongTangent);
+            if (tangentSpeedChange > Abs(relativeSpeedAlongTangent)) { //if we were able to change direction: use static friction to arrest tangent velocity completly
+                double actualStaticFriction = maxStaticFrictionForce * Abs(relativeSpeedAlongTangent) / tangentSpeedChange; //use linearity of speed change(works even with rotation)
+                impulse += frictionDirection * actualStaticFriction;
+            } else {
+                double dynamicFricitonForce = normalForce * (colliderA.dynamicFriction + colliderB.dynamicFriction) / 2;
+                impulse += frictionDirection * dynamicFricitonForce;
+            }
+            colliderA.physics.applyForceAtPosition(-impulse, contact, Space.global);
+            colliderB.physics.applyForceAtPosition(impulse, contact, Space.global);
+            pushApart();
         }
 
+        /// <summary>
+        /// Teleports the colliding objects to remove collider ovelap. Will make negligable changes on reasonable velocities.
+        /// </summary>
         void pushApart() {
-            const double precent = 0.05;
-            const double slop = 0.04;
-            Vector2d correction = penetration * precent / (1 / a.physics.totalMass + 1 / b.physics.totalMass);
-            a.gameObject.position -= correction / a.physics.totalMass;
-            b.gameObject.position += correction / b.physics.totalMass;
-          //  Physics.getConatct((a.GetType().GetMethod(,).Invoke(a,b);
+            if (colliderB.physics.totalMass == double.PositiveInfinity) {
+                colliderA.gameObject.position -= normal * penetrationDepth;
+            } else {
+                colliderA.gameObject.position -= normal * penetrationDepth * colliderB.physics.totalMass / (colliderA.physics.totalMass + colliderB.physics.totalMass);
+            }
+            if (colliderA.physics.totalMass == double.PositiveInfinity) {
+                colliderB.gameObject.position += normal * penetrationDepth;
+            } else {
+                colliderB.gameObject.position += normal * penetrationDepth * colliderA.physics.totalMass / (colliderA.physics.totalMass + colliderB.physics.totalMass);
+            }
         }
     }
 }

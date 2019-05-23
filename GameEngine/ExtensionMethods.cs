@@ -36,7 +36,7 @@ namespace GameEngine
         }
 
         /// <summary>
-        /// Rotate a vector a certain amount of degrees.
+        /// Return a vector rotated by a certain amount of degrees.
         /// </summary>
         /// <param name="vector">The vector to rotate.</param>
         /// <param name="angle">The amount of degrees to rotate it.</param>
@@ -45,6 +45,13 @@ namespace GameEngine
             angle += vector.angle();
             double length = vector.Length;
             return new Vector2d(Cos(angle) * length,Sin(angle) * length);
+        }
+
+        /// <summary>
+        /// Return a vector 90 degrees counterclockwise from the given vector
+        /// </summary>
+        public static Vector2d rotate90Deg(this Vector2d vector) {
+            return new Vector2d(-vector.Y, vector.X);
         }
 
         /// <summary>
@@ -129,14 +136,26 @@ namespace GameEngine
             return new Vector2d(-s * a.Y,s * a.X);
         }
 
+        /// <summary>
+        /// Computes the angle between two vectors, in radians.
+        /// </summary>
         public static Angle angleBetween(this Vector2d a, Vector2d b) {
             return Acos(Vector2d.Dot(a,b) / (a.Length * b.Length));
         }
 
+        /// <summary>
+        /// Computes the square of a double
+        /// </summary>
         public static double sqr(this double a) => a * a;
 
+        /// <summary>
+        /// returns min &lt; a &lt; max
+        /// </summary>
         public static bool isInRange(this double a, double min, double max) =>  a<max && a> min;
 
+        /// <summary>
+        /// return -abs &lt; a &lt; abs
+        /// </summary>
         public static bool inSymetricRange(this double a,double abs) => a < abs && a > -abs;
     }
 }

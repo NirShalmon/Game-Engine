@@ -25,17 +25,17 @@ namespace GameEngine
         /// <summary>
         /// How bouncy will the object be? Recomended to keep between zero and one.
         /// </summary>
-        public double bounciness { set; get; } = 0.25;
+        public double bounciness { set; get; } = 0.5;
 
         /// <summary>
         /// The coefficiant of friction of the objet with objects it is not moving relative to.
         /// </summary>
-        public double staticFriction { set; get; } = 0.5;
+        public double staticFriction { set; get; } = 0.12;
 
         /// <summary>
         /// The coefficiant of friction of the objet with objects it is moving relative to.
         /// </summary>
-        public double dynamicFriction { set; get; } = 0.4;
+        public double dynamicFriction { set; get; } = 0.1;
 
         /// <summary>
         /// The center of the circle collider relative to the gameobject.

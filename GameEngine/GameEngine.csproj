@@ -56,8 +56,8 @@
     <Compile Include="CircleCollider.cs" />
     <Compile Include="Collider.cs" />
     <Compile Include="Collision.cs" />
+    <Compile Include="CollisionDetectors.cs" />
     <Compile Include="Component.cs" />
-    <Compile Include="Contact.cs" />
     <Compile Include="ExtensionMethods.cs" />
     <Compile Include="Game.cs" />
     <Compile Include="GameObject.cs" />
@@ -93,6 +93,9 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="sprites\arrow.png" />
+    <Content Include="sprites\box.png" />
+    <Content Include="sprites\circle.png" />
     <Content Include="TODO list.txt" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

@@ -123,6 +123,7 @@ namespace GameEngine
         /// <param name="center">The center of the line, in local space.</param>
         /// <param name="length">The length of the line, it will be divided equaly to both sides of the center.</param>
         /// <param name="angle">The angle of the line with the X axis in the local space.</param>
+        /// <param name="bounciness">The bounciness coefficient of this collider.</param>
         public LineCollider(Physics physics,Vector2d center, double length, double angle, double bounciness): base(physics,center,bounciness) {
             this.length = length;
             this.angle = angle;

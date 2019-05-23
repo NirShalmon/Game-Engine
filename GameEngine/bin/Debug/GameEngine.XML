@@ -105,7 +105,7 @@
             Construct a circle collider based on some of the parameters.
             </summary>
             <param name="radius">The radius of the circle collider.</param>
-            <param name="center">The center of the circle collider relatice to the gameobject.</param>
+            <param name="center">The center of the circle collider relative to the gameobject.</param>
             <param name="physics">The physics object connected to this cllider.</param>
         </member>
         <member name="M:GameEngine.CircleCollider.#ctor(System.Double,OpenTK.Vector2d,System.Double,GameEngine.Physics)">
@@ -135,6 +135,16 @@
         <member name="P:GameEngine.Collider.bounciness">
             <summary>
             How bouncy will the object be? Recomended to keep between zero and one.
+            </summary>
+        </member>
+        <member name="P:GameEngine.Collider.staticFriction">
+            <summary>
+            The coefficiant of friction of the objet with objects it is not moving relative to.
+            </summary>
+        </member>
+        <member name="P:GameEngine.Collider.dynamicFriction">
+            <summary>
+            The coefficiant of friction of the objet with objects it is moving relative to.
             </summary>
         </member>
         <member name="P:GameEngine.Collider.center">
@@ -173,19 +183,19 @@
             A collision object includes data about the collision, and functions to invoke the collision. This is passed in collision related events.
             </summary>
         </member>
-        <member name="F:GameEngine.Collision.a">
+        <member name="F:GameEngine.Collision.colliderA">
             <summary>
             The first collider in the collision.
             </summary>
         </member>
-        <member name="F:GameEngine.Collision.b">
+        <member name="F:GameEngine.Collision.colliderB">
             <summary>
             The second collider in the collision.
             </summary>
         </member>
         <member name="F:GameEngine.Collision.relativeVelocity">
             <summary>
-            The relative velocity vector of the collision.
+            The relative velocity vector of the collision at the contact point.
             </summary>
         </member>
         <member name="F:GameEngine.Collision.relativeSpeedAlongNormal">
@@ -220,10 +230,10 @@
         </member>
         <member name="F:GameEngine.Collision.penetrationDepth">
             <summary>
-            How deep are the objects penetrating into each other.
+            The depth of the overlap between the two colliders.
             </summary>
         </member>
-        <member name="M:GameEngine.Collision.#ctor(GameEngine.Collider,GameEngine.Collider,OpenTK.Vector2d,OpenTK.Vector2d,System.Double,System.Double)">
+        <member name="M:GameEngine.Collision.#ctor(GameEngine.Collider,GameEngine.Collider,OpenTK.Vector2d,OpenTK.Vector2d,System.Double)">
             <summary>
             A collision constructor filling in all of the collision data.
             </summary>
@@ -231,13 +241,55 @@
             <param name="b">The second collider in the collision.</param>
             <param name="normal">The vector perpendicular to the collision.</param>
             <param name="contact">The point where the two colliders touched</param>
-            <param name="restetution">The bounce coefficient of the collision</param>
             <param name="penetrationDepth">How deep are the objects penetrating into each other</param>
         </member>
         <member name="M:GameEngine.Collision.collide">
             <summary>
             Invoke the collision, this will make the physics engine take the collision into effect.
             </summary>
+        </member>
+        <member name="M:GameEngine.Collision.pushApart">
+            <summary>
+            Teleports the colliding objects to remove collider ovelap. Will make negligable changes on reasonable velocities.
+            </summary>
+        </member>
+        <member name="T:GameEngine.CollisionDetectors">
+            <summary>
+            This class should contain a getCollision function for each possible pair of colliders.
+            Add functions to this class when you create new colliders.
+            </summary>
+        </member>
+        <member name="M:GameEngine.CollisionDetectors.getCollision(GameEngine.CircleCollider,GameEngine.CircleCollider)">
+            <summary>
+            Get collision data between two collliders. NOTE, this will not cause a physical collision, if you want to cause a collision use the function "collide()" in the object returned.
+            </summary>
+            <param name="a">Any circle collider.</param>
+            <param name="b">Any Circle collider.</param>
+            <returns>The collision data between the colliders, or null if no collision occured.</returns>
+        </member>
+        <member name="M:GameEngine.CollisionDetectors.getCollision(GameEngine.CircleCollider,GameEngine.LineCollider)">
+            <summary>
+            Get collision data between two collliders. NOTE, this will not cause a physical collision, if you want to cause a collision use the function "collide()" in the object returned.
+            </summary>
+            <param name="a">Any circle collider.</param>
+            <param name="b">Any line collider.</param>
+            <returns>The collision data between the colliders, or null if no collision occured.</returns>
+        </member>
+        <member name="M:GameEngine.CollisionDetectors.getCollision(GameEngine.LineCollider,GameEngine.CircleCollider)">
+            <summary>
+            Get collision data between two collliders. NOTE, this will not cause a physical collision, if you want to cause a collision use the function "collide()" in the object returned.
+            </summary>
+            <param name="a">Any line collider.</param>
+            <param name="b">Any Circle collider.</param>
+            <returns>The collision data between the colliders, or null if no collision occured.</returns>
+        </member>
+        <member name="M:GameEngine.CollisionDetectors.getContact(GameEngine.LineCollider,GameEngine.LineCollider)">
+            <summary>
+            Get collision data between two collliders. NOTE, this will not cause a physical collision, if you want to cause a collision use the function "collide()" in the object returned.
+            </summary>
+            <param name="a">Any line collider.</param>
+            <param name="b">Any line collider.</param>
+            <returns>The collision data between the colliders, or null if no collision occured.</returns>
         </member>
         <member name="T:GameEngine.Component">
             <summary>
@@ -283,11 +335,16 @@
         </member>
         <member name="M:GameEngine.ExtensionMethods.rotate(OpenTK.Vector2d,System.Double)">
             <summary>
-            Rotate a vector a certain amount of degrees.
+            Return a vector rotated by a certain amount of degrees.
             </summary>
             <param name="vector">The vector to rotate.</param>
             <param name="angle">The amount of degrees to rotate it.</param>
             <returns>The rotated vector.</returns>
+        </member>
+        <member name="M:GameEngine.ExtensionMethods.rotate90Deg(OpenTK.Vector2d)">
+            <summary>
+            Return a vector 90 degrees counterclockwise from the given vector
+            </summary>
         </member>
         <member name="M:GameEngine.ExtensionMethods.distance(OpenTK.Vector2d,OpenTK.Vector2d)">
             <summary>
@@ -352,6 +409,26 @@
             <param name="a">Any vector.</param>
             <param name="s">Any scalar.</param>
             <returns>The cross product of the vector cross the scalar(sXa).</returns>
+        </member>
+        <member name="M:GameEngine.ExtensionMethods.angleBetween(OpenTK.Vector2d,OpenTK.Vector2d)">
+            <summary>
+            Computes the angle between two vectors, in radians.
+            </summary>
+        </member>
+        <member name="M:GameEngine.ExtensionMethods.sqr(System.Double)">
+            <summary>
+            Computes the square of a double
+            </summary>
+        </member>
+        <member name="M:GameEngine.ExtensionMethods.isInRange(System.Double,System.Double,System.Double)">
+            <summary>
+            returns min &lt; a &lt; max
+            </summary>
+        </member>
+        <member name="M:GameEngine.ExtensionMethods.inSymetricRange(System.Double,System.Double)">
+            <summary>
+            return -abs &lt; a &lt; abs
+            </summary>
         </member>
         <member name="T:GameEngine.Game">
             <summary>
@@ -708,6 +785,7 @@
             <param name="center">The center of the line, in local space.</param>
             <param name="length">The length of the line, it will be divided equaly to both sides of the center.</param>
             <param name="angle">The angle of the line with the X axis in the local space.</param>
+            <param name="bounciness">The bounciness coefficient of this collider.</param>
         </member>
         <member name="T:GameEngine.Physics">
             <summary>
@@ -744,19 +822,19 @@
             The constant acceleration of the body, measured in unity/seconds^2.
             </summary>
         </member>
-        <member name="P:GameEngine.Physics.circleColliders">
+        <member name="P:GameEngine.Physics.colliders">
             <summary>
-            The circle colliders of this object.
-            </summary>
-        </member>
-        <member name="P:GameEngine.Physics.lineColliders">
-            <summary>
-            The line colliders of this object.
+            The colliders of this object. Colliders are responsible for detecting and acting in result of collisions.
             </summary>
         </member>
         <member name="P:GameEngine.Physics.mass">
             <summary>
             The mass of this object, this does not include the mass of children objects.
+            </summary>
+        </member>
+        <member name="P:GameEngine.Physics.inverseMass">
+            <summary>
+            One divided by the mass of the object, useful to speed up some calculations.
             </summary>
         </member>
         <member name="P:GameEngine.Physics.momentOfInertia">
@@ -794,11 +872,17 @@
             Apply drag on the object based on the related properties.
             </summary>
         </member>
+        <member name="M:GameEngine.Physics.getVelocityAtPoint(OpenTK.Vector2d,GameEngine.Space)">
+            <summary>
+            The velocity of the object at a (possibly offcenter) point. This takes rotation into account
+            </summary>
+        </member>
         <member name="M:GameEngine.Physics.applyForce(OpenTK.Vector2d,GameEngine.Space)">
             <summary>
             Applies a force to the object, this will change it's velocity.
             </summary>
             <param name="force">The force to apply on the object.</param>
+            <param name="space">Are we working in global or local coordinates</param>
         </member>
         <member name="M:GameEngine.Physics.applyForceInDirection(System.Double,OpenTK.Vector2d,GameEngine.Space)">
             <summary>
@@ -806,6 +890,7 @@
             </summary>
             <param name="force">The magnitude of the force to be applied.</param>
             <param name="direction">A normalized direction to apply the force at.</param>
+            <param name="space">Are we working in global or local coordinates</param>
         </member>
         <member name="M:GameEngine.Physics.applyTorque(System.Double)">
             <summary>
@@ -819,6 +904,7 @@
             </summary>
             <param name="force">The force vector to apply.</param>
             <param name="position">The local position to apply the force at.</param>
+            <param name="space">Are we working in global or local coordinates</param>
         </member>
         <member name="P:GameEngine.Physics.calculatedThisFrame">
             <summary>
@@ -830,30 +916,6 @@
             An physics update function to be called on the physics event every physics frame.
             </summary>
             <param name="frame">The serial number of the frame.</param>
-        </member>
-        <member name="M:GameEngine.Physics.getCollision(GameEngine.CircleCollider,GameEngine.CircleCollider)">
-            <summary>
-            Get collision data between two collliders. NOTE, this will not cause a physical collision, if you want to cause a collision use the function "collide()" in the object returned.
-            </summary>
-            <param name="a">Any circle collider.</param>
-            <param name="b">Any circle collider.</param>
-            <returns>The collision data between the colliders, or null if no collision occured.</returns>
-        </member>
-        <member name="M:GameEngine.Physics.getCollision(GameEngine.LineCollider,GameEngine.LineCollider)">
-            <summary>
-            Get collision data between two collliders. NOTE, this will not cause a physical collision, if you want to cause a collision use the function "collide()" in the object returned.
-            </summary>
-            <param name="a">Any line collider.</param>
-            <param name="b">Any line collider.</param>
-            <returns>The collision data between the colliders, or null if no collision occured.</returns>
-        </member>
-        <member name="M:GameEngine.Physics.getCollision(GameEngine.CircleCollider,GameEngine.LineCollider)">
-            <summary>
-            Get collision data between two collliders. NOTE, this will not cause a physical collision, if you want to cause a collision use the function "collide()" in the object returned.
-            </summary>
-            <param name="a">Any circle collider.</param>
-            <param name="b">Any line collider.</param>
-            <returns>The collision data between the colliders, or null if no collision occured.</returns>
         </member>
         <member name="T:GameEngine.DragType">
             <summary>
